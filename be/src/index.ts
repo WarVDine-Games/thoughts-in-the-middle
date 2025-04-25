@@ -1,3 +1,4 @@
+import { Server } from "socket.io";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -22,6 +23,8 @@ const serverInstance = server.listen(PORT, () =>
 );
 
 // Connect via webSocket
-// const io = socket(serverInstance);
-// io.on("connection", () => {logger.info("connected!")});
-logger.info("io socket ready");
+const io = new Server(serverInstance);
+io.on("connection", (socket) => {
+    logger.info("connected socket!");
+});
+logger.info("server configuration complete");
