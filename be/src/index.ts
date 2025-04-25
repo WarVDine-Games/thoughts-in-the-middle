@@ -152,6 +152,11 @@ io.on("connection", (socket) => {
             return;
         }
 
+        if (gameRoom.isGameOver) {
+            socket.emit("error", { message: "Game is already over" });
+            return;
+        }
+
         if (!gameRoom.currentPair) {
             socket.emit("error", { message: "Player pair not found" });
             return;
@@ -190,6 +195,11 @@ io.on("connection", (socket) => {
             const gameRoom = gameManager.findGame(player.currentGameRoomId);
             if (!gameRoom) {
                 socket.emit("error", { message: "Game not found" });
+                return;
+            }
+
+            if (gameRoom.isGameOver) {
+                socket.emit("error", { message: "Game is already over" });
                 return;
             }
 
