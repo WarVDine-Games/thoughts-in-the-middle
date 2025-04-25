@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+// @ts-ignore
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
