@@ -33,7 +33,7 @@ export const MainGameScreen = ({
     selectCard,
     onAssignThoughtToken,
 }: MainGameScreenProps) => {
-    const [shouldShowLobby, setShouldShowLobby] = useState(false);
+    const [shouldShowLobby] = useState(false);
     const findPlayerFromLobbyList = (uniqueClientId: string) => {
         return lobbyInfo.lobby.find(
             (player) => player.uniqueClientId === uniqueClientId
