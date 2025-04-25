@@ -26,7 +26,7 @@ function App() {
         onGiveThoughtToken,
     } = useSocketIo({
         socketIoUrl:
-            process.env.REACT_APP_BACKEND_URL ?? "http://localhost:2019",
+            "https://thoughts-in-the-middle-f380eda303b8.herokuapp.com/",
         uniqueClientId,
         updateLobbyInfo: setLobbyInfo,
         showError: errorState.showError,
