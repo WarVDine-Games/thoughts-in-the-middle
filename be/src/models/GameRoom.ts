@@ -1,4 +1,3 @@
-import { start } from "repl";
 import { buildDeck, CRYSTAL_BALL } from "../helpers/buildDeck";
 import { GameManager } from "../managers/GameManager";
 import { Player } from "./Player";
@@ -106,11 +105,7 @@ export class GameRoom {
     }
 
     startGame(): void {
-        // One "set of cards" is 18 cards
-        // We want to have n-1 sets of cards, where n is the number of players
-        // Ex: if we have 2 players, we want 1 set of cards
-        const totalCards = (this._lobby.length - 1) * 18;
-        this._deck = buildDeck(totalCards);
+        this._deck = buildDeck(this._lobby.length);
         this._crystalBallCount = 3;
 
         // Shuffle the player order and reset their cards
