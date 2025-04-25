@@ -1,7 +1,8 @@
-import React from 'react';
-import styles from './Button.module.scss';
+import React from "react";
+import styles from "./Button.module.scss";
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children: React.ReactNode;
     onClick: () => void;
     disabled?: boolean;
@@ -23,4 +24,4 @@ export const Button = ({
             {children}
         </button>
     );
-}
+};

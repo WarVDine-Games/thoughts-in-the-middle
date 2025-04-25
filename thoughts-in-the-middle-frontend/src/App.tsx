@@ -1,22 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { io } from 'socket.io-client'
-import { CreateJoinScreen } from './components/CreateJoinScreen/CreateJoinScreen'
+import { useState } from "react";
+import "./App.css";
+import { LobbyInfo } from "./interfaces";
+import { CreateJoinScreen } from "./screens/CreateJoinScreen/CreateJoinScreen";
+import { useSocketIo } from "./socket-io/useSocketIo";
+import { useUniqueClientId } from "./socket-io/useUniqueClientId";
+import { WaitingRoomScreen } from "./screens/WaitingRoomScreen/WaitingRoomScreen";
+import { useErrorToast } from "./components/ErrorToast/useErrorToast";
+import { ErrorToast } from "./components/ErrorToast/ErrorToast";
 
 function App() {
-  const [count, setCount] = useState(0)
-  const socket = io('http://localhost:2019', {
-    autoConnect: true,
-    transports: ['websocket'],
-  })
+    const uniqueClientId = useUniqueClientId();
+    const errorState = useErrorToast();
+    const [lobbyInfo, setLobbyInfo] = useState<LobbyInfo | null>(null);
 
-  return (
-    <div>
-      <CreateJoinScreen />
-    </div>
-  )
+    const { onCreateRoom, onJoinRoom, onStartGame } = useSocketIo({
+        socketIoUrl: "http://localhost:2019",
+        uniqueClientId,
+        updateLobbyInfo: setLobbyInfo,
+        showError: errorState.showError,
+    });
+
+    return (
+        <div>
+            {errorState.error && (
+                <ErrorToast
+                    error={errorState.error}
+                    onClose={errorState.hideError}
+                />
+            )}
+            {!lobbyInfo ? (
+                <CreateJoinScreen
+                    onCreateRoom={onCreateRoom}
+                    onJoinRoom={onJoinRoom}
+                />
+            ) : (
+                <WaitingRoomScreen
+                    onStartGame={onStartGame}
+                    lobbyInfo={lobbyInfo}
+                    uniqueClientId={uniqueClientId}
+                />
+            )}
+        </div>
+    );
 }
 
-export default App
+export default App;

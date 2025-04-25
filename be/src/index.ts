@@ -3,6 +3,8 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { Logger } from "./helpers/logger";
+import { GameManager, JoinGameActionResponse } from "./managers/GameManager";
+import { PlayerManager } from "./managers/PlayerManager";
 
 // PORT we will listen on
 const PORT = process.env.PORT || 2019;
@@ -24,7 +26,115 @@ const serverInstance = server.listen(PORT, () =>
 
 // Connect via webSocket
 const io = new Server(serverInstance);
+const gameManager = new GameManager();
+const playerManager = new PlayerManager();
+
+interface CreateRoomInput {
+    name: string;
+    uniqueClientId: string;
+}
+
+interface JoinRoomInput {
+    name: string;
+    roomCode: string;
+    uniqueClientId: string;
+}
+
 io.on("connection", (socket) => {
-    logger.info("connected socket!");
+    socket.on("createRoom", ({ uniqueClientId, name }: CreateRoomInput) => {
+        // Check if the user is already connected
+        let player = playerManager.findPlayerFromClientId(uniqueClientId);
+        if (player) {
+            player.name = name;
+            player.socketId = socket.id;
+        } else {
+            player = playerManager.createPlayer(
+                uniqueClientId,
+                socket.id,
+                name,
+            );
+        }
+
+        const newGameRoom = gameManager.createGame(player);
+
+        socket.join(newGameRoom.roomId);
+        io.to(newGameRoom.roomId).emit("lobbyInfo", newGameRoom.lobbyInfo);
+    });
+
+    socket.on(
+        "joinRoom",
+        ({ uniqueClientId, name, roomCode }: JoinRoomInput) => {
+            const gameRoom = gameManager.findGame(roomCode);
+            if (!gameRoom) {
+                socket.emit("error", { message: "Game not found" });
+                return;
+            }
+
+            // Check if the user is already connected
+            let player = playerManager.findPlayerFromClientId(uniqueClientId);
+            if (player) {
+                player.name = name;
+                player.socketId = socket.id;
+            } else {
+                player = playerManager.createPlayer(
+                    uniqueClientId,
+                    socket.id,
+                    name,
+                );
+            }
+
+            const joinGameResponse = gameManager.joinGame(player, roomCode);
+            if (
+                [
+                    JoinGameActionResponse.GAME_NOT_FOUND,
+                    JoinGameActionResponse.LOBBY_FULL,
+                ].includes(joinGameResponse)
+            ) {
+                socket.emit("error", { message: joinGameResponse });
+                return;
+            }
+
+            socket.join(roomCode);
+            io.to(roomCode).emit("lobbyInfo", gameRoom.lobbyInfo);
+        },
+    );
+
+    socket.on("startGame", ({ gameRoomId, uniqueClientId }) => {
+        const gameRoom = gameManager.findGame(gameRoomId);
+        if (!gameRoom) {
+            socket.emit("error", { message: "Game not found" });
+            return;
+        }
+
+        const player = playerManager.findPlayerFromClientId(uniqueClientId);
+        if (!player) {
+            socket.emit("error", { message: "Player not found" });
+            return;
+        }
+
+        if (gameRoom.roomAdminPlayerId !== player.uniqueClientId) {
+            socket.emit("error", { message: "You are not the admin" });
+            return;
+        }
+
+        if (gameRoom.lobby.length < gameRoom.MIN_PLAYERS) {
+            socket.emit("error", {
+                message: `Not enough players to start the game. Minimum is ${gameRoom.MIN_PLAYERS}`,
+            });
+            return;
+        }
+
+        gameRoom.startGame();
+        logger.debug(gameRoom.gameInfo);
+        logger.debug(gameRoom.lobbyInfo);
+
+        io.to(gameRoomId).emit("lobbyInfo", gameRoom.lobbyInfo);
+        io.to(gameRoomId).emit("gameInfo", gameRoom.gameInfo);
+        gameRoom.lobby.forEach((player) => {
+            io.to(player.socketId).emit("yourCards", player.cards);
+        });
+        io.to(gameRoomId).emit("startGame");
+    });
 });
+
 logger.info("server configuration complete");

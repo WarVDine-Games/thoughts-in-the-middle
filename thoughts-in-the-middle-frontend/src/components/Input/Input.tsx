@@ -1,6 +1,7 @@
 import styles from "./Input.module.scss";
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps
+    extends React.InputHTMLAttributes<HTMLInputElement> {
     label?: string;
     error?: string;
 }
@@ -24,4 +25,4 @@ export const Input = ({
             <p className={styles.errorMessage}>{error ?? ""}</p>
         </div>
     );
-}
+};
