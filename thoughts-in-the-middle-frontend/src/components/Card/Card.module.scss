@@ -16,6 +16,27 @@
     height: 24vmin;
     margin: 1vmin;
     transition: transform 0.05s, box-shadow 0.2s;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.card.hoverable::after {
+    content: "";
+    position: absolute;
+    bottom: -50%;
+    right: -50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    // transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.card.hoverable:hover::after {
+    width: 300%;
+    height: 300%;
 }
 
 .card > h2 {
@@ -25,7 +46,7 @@
     word-break: break-word;
 }
 
-.cardContainer:hover .card {
+.cardContainer.hoverable:hover .card {
     transform: translateY(-0.5vmin);
     box-shadow: #bbb 0px 8px 16px 0px, #bbb 0px 4px 8px 0px;
 }

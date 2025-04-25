@@ -55,8 +55,8 @@ export const TableInfo = ({
     return (
         <div className={styles.tableInfo}>
             <div className={styles.tableCards}>
-                {player1Card && <Card wordOnCard={player1Card} />}
-                {player2Card && <Card wordOnCard={player2Card} />}
+                {player1Card && <Card wordOnCard={player1Card} isHoverAllowed={false} />}
+                {player2Card && <Card wordOnCard={player2Card} isHoverAllowed={false} />}
                 {amIAdmin && player1Card && player2Card && (
                     <div className={styles.assignThoughtToken}>
                         <Button onClick={() => onAssignThoughtToken(0)}>
