@@ -1,0 +1,33 @@
+.thoughtToken {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: default;
+}
+
+.thoughtToken.WEAK {
+    background-color: beige;
+}
+.thoughtToken.STRONG {
+    background-color: purple;
+}
+.thoughtToken.NORMAL {
+    background-color: orange;
+}
+
+.thoughtTokenText {
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    cursor: default;
+    font-family: "Times New Roman", Times, serif;
+}
+
+.thoughtTokenText.STRONG {
+    color: white;
+}
