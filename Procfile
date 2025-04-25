@@ -1,1 +1,0 @@
-worker: cd be && npm ci && npm start
