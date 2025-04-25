@@ -6,6 +6,7 @@ import { Logger } from "./helpers/logger";
 import { GameManager, JoinGameActionResponse } from "./managers/GameManager";
 import { PlayerManager } from "./managers/PlayerManager";
 import { thoughtTokenMapping } from "./models/ThoughtToken";
+import { createServer } from "http";
 
 // PORT we will listen on
 const PORT = process.env.PORT || 2019;
@@ -20,13 +21,10 @@ server.get("/", (req, res) => {
     res.status(200).json({ Hello: "World!" });
 });
 
-// Create serverInstance so we can connect via webSocket
-const serverInstance = server.listen(PORT, () =>
-    logger.info(`\n=== Listening on post ${PORT} ===\n`),
-);
+const httpServer = createServer(server);
 
 // Connect via webSocket
-const io = new Server(serverInstance);
+const io = new Server(httpServer);
 const gameManager = new GameManager();
 const playerManager = new PlayerManager();
 
@@ -213,4 +211,7 @@ io.on("connection", (socket) => {
     );
 });
 
-logger.info("server configuration complete");
+// Create serverInstance so we can connect via webSocket
+httpServer.listen(PORT, () =>
+    logger.info(`\n=== Listening on post ${PORT} ===\n`),
+);
