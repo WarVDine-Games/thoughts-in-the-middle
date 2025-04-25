@@ -17,6 +17,7 @@ server.use(helmet());
 server.use(express.json());
 server.use(cors());
 
+// @ts-ignore
 server.get("/", (req, res) => {
     logger.info("GET /");
     res.status(200).json({ Hello: "World!" });
