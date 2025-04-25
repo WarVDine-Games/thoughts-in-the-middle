@@ -10,6 +10,6 @@ export default meta;
 
 export const Default = {
     args: {
-        wordOnCard: "Card 1",
+        wordOnCard: "Fourth of July",
     },
 };

@@ -6,8 +6,10 @@ export interface CardProps {
 
 export const Card = ({ wordOnCard }: CardProps) => {
     return (
-        <div className={styles.card}>
-            <h2>{wordOnCard}</h2>
+        <div className={styles.cardContainer}>
+            <div className={styles.card}>
+                <h2>{wordOnCard}</h2>
+            </div>
         </div>
     );
 };

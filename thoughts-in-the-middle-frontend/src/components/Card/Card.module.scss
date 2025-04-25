@@ -1,17 +1,31 @@
 .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    color: black;
     background-color: beige;
-    border: 12px solid lightgrey;
+    border: clamp(4px, 1vmin, 8px) solid lightgrey;
     border-radius: 8px;
     box-shadow: #bbb 0px 4px 8px 0px, #bbb 0px 2px 4px 0px;
-    padding: 16px;
-    margin: 12px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    width: fit-content;
-    padding: 4rem 2rem;
-    color: black;
+
+    // height to width has a 4:3 ratio
+    width: 18vmin;
+    height: 24vmin;
+    margin: 1vmin;
+    transition: transform 0.05s, box-shadow 0.2s;
 }
 
-.card:hover {
-    transform: translateY(-4px);
+.card > h2 {
+    margin: 0;
+    // padding: 0 0.5vmin;
+    font-size: clamp(0.5rem, 2.5vmin, 1.6rem);
+    word-break: break-word;
+}
+
+.cardContainer:hover .card {
+    transform: translateY(-0.5vmin);
     box-shadow: #bbb 0px 8px 16px 0px, #bbb 0px 4px 8px 0px;
 }
