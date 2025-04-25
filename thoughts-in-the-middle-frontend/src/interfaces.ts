@@ -13,7 +13,7 @@ export interface LobbyInfo {
 export interface PlayerPairInfo {
     player1: PublicPlayerInfo;
     player2: PublicPlayerInfo;
-    thoughtTokenStrengths: string[];
+    thoughtTokens: string[];
 }
 
 export interface GameInfo {
@@ -23,4 +23,12 @@ export interface GameInfo {
     pairedPlayerId: string;
     currentPlayerCard: string | null;
     pairedPlayerCard: string | null;
+
+    /** Goes from 3 to 0 */
+    crystalBallStrength: number;
+}
+
+export interface GameOverInfo {
+    winningPair: PlayerPairInfo;
+    totalScore: number;
 }

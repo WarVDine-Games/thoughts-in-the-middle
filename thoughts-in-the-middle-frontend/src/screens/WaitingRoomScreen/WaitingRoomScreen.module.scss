@@ -27,25 +27,4 @@
 
 .playerList {
     grid-area: playerList;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    margin-bottom: 20px;
-}
-
-.playerList h2 {
-    margin-bottom: 4rem;
-}
-
-.playerListUl {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-.playerListUl li {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0.5rem 0;
 }

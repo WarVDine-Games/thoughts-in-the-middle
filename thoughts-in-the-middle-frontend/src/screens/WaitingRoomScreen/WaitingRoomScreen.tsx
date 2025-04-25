@@ -1,6 +1,7 @@
 import styles from "./WaitingRoomScreen.module.scss";
 import { Button } from "../../components/Button/Button";
 import { LobbyInfo } from "../../interfaces";
+import { LobbyList } from "../../components/LobbyList/LobbyList";
 
 export interface WaitingRoomScreenProps {
     lobbyInfo: LobbyInfo;
@@ -32,12 +33,7 @@ export const WaitingRoomScreen = ({
             </div>
 
             <div className={styles.playerList}>
-                <h2>Players</h2>
-                <ul className={styles.playerListUl}>
-                    {lobbyInfo.lobby.map((player) => (
-                        <li key={player.uniqueClientId}>{player.name}</li>
-                    ))}
-                </ul>
+                <LobbyList publicPlayerInfo={lobbyInfo.lobby} />
             </div>
         </div>
     );

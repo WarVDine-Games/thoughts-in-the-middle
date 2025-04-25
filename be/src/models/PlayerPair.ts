@@ -22,12 +22,16 @@ export class PlayerPair {
         this.thoughtTokens.push(newToken);
     }
 
-    set player1ChosenCard(card: string) {
-        this._player1ChosenCard = card;
+    get totalThoughtTokenValues(): number {
+        return this.thoughtTokens.reduce((acc, token) => acc + token.value, 0);
     }
 
-    set player2ChosenCard(card: string) {
-        this._player2ChosenCard = card;
+    get player1ChosenCard(): string | null {
+        return this._player1ChosenCard;
+    }
+
+    get player2ChosenCard(): string | null {
+        return this._player2ChosenCard;
     }
 
     clearChosenCards(): void {
@@ -53,5 +57,22 @@ export class PlayerPair {
             player2: this._player2.publicPlayerInfo,
             thoughtTokens: this.thoughtTokenStrengths,
         };
+    }
+
+    get playerIdThatShouldPlay(): string {
+        if (this._player2ChosenCard === null) {
+            return this._player2.uniqueClientId;
+        } else if (this._player1ChosenCard === null) {
+            return this._player1.uniqueClientId;
+        }
+        return "";
+    }
+
+    playCardForPlayer(uniqueClientId: string, card: string): void {
+        if (this._player1.uniqueClientId === uniqueClientId) {
+            this._player1ChosenCard = card;
+        } else if (this._player2.uniqueClientId === uniqueClientId) {
+            this._player2ChosenCard = card;
+        }
     }
 }

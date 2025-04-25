@@ -1,5 +1,5 @@
 import { io, Socket } from "socket.io-client";
-import { GameInfo, LobbyInfo } from "../interfaces";
+import { GameInfo, GameOverInfo, LobbyInfo } from "../interfaces";
 
 export interface UseSocketIoProps {
     socketIoUrl?: string;
@@ -8,6 +8,7 @@ export interface UseSocketIoProps {
     showError: (error: string) => void;
     updateGameInfo: (gameInfo: GameInfo | null) => void;
     updatePlayerCards: (cards: string[]) => void;
+    updateGameOverInfo: (gameOverInfo: GameOverInfo | null) => void;
 }
 
 export interface UseSocketIoReturn {
@@ -15,6 +16,8 @@ export interface UseSocketIoReturn {
     onCreateRoom: (name: string) => void;
     onJoinRoom: (name: string, roomCode: string) => void;
     onStartGame: (gameRoomId: string) => void;
+    onSelectCard: (card: string) => void;
+    onGiveThoughtToken: (thoughtTokenStrength: number) => void;
 }
 
 export const useSocketIo = ({
@@ -24,6 +27,7 @@ export const useSocketIo = ({
     showError,
     updateGameInfo,
     updatePlayerCards,
+    updateGameOverInfo,
 }: UseSocketIoProps) => {
     const socket = io(socketIoUrl, {
         autoConnect: true,
@@ -34,6 +38,7 @@ export const useSocketIo = ({
         updateLobbyInfo(lobbyInfo);
     });
     socket.on("gameInfo", (gameInfo: GameInfo | null) => {
+        console.log("gameInfo", gameInfo);
         updateGameInfo(gameInfo);
     });
     socket.on("yourCards", (cards: string[]) => {
@@ -41,6 +46,9 @@ export const useSocketIo = ({
     });
     socket.on("error", (error) => {
         showError(error.message ?? error);
+    });
+    socket.on("gameOver", (gameOverInfo: GameOverInfo | null) => {
+        updateGameOverInfo(gameOverInfo);
     });
 
     const onCreateRoom = (name: string) => {
@@ -55,9 +63,22 @@ export const useSocketIo = ({
         socket.emit("startGame", { gameRoomId, uniqueClientId });
     };
 
+    const onSelectCard = (card: string) => {
+        socket.emit("selectCard", { uniqueClientId, card });
+    };
+
+    const onGiveThoughtToken = (thoughtTokenStrength: number) => {
+        socket.emit("giveThoughtToken", {
+            uniqueClientId,
+            thoughtTokenStrength,
+        });
+    };
+
     return {
         onCreateRoom,
         onJoinRoom,
         onStartGame,
+        onSelectCard,
+        onGiveThoughtToken,
     };
 };

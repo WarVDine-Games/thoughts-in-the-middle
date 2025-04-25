@@ -1,0 +1,41 @@
+.mainGameScreen {
+    max-width: 100%;
+    width: 100vw;
+    display: grid;
+    grid-template-areas:
+        "gameInfo gameInfo lobbyInfo"
+        "gameInfo gameInfo lobbyInfo"
+        "playerCards playerCards lobbyInfo"
+        "playerCards playerCards lobbyInfo";
+}
+
+.lobbyInfo {
+    grid-area: lobbyInfo;
+}
+
+.playPairList {
+    display: flex;
+    flex-direction: column;
+}
+
+.gameInfo {
+    grid-area: gameInfo;
+}
+
+.playerCards {
+    grid-area: playerCards;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style: none;
+    gap: 0;
+}
+
+.playerCards li {
+    margin: 0;
+    padding: 0;
+}
+
+.selectable {
+    cursor: pointer;
+}

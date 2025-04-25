@@ -1,5 +1,5 @@
 import { start } from "repl";
-import { buildDeck } from "../helpers/buildDeck";
+import { buildDeck, CRYSTAL_BALL } from "../helpers/buildDeck";
 import { GameManager } from "../managers/GameManager";
 import { Player } from "./Player";
 import { PlayerPair } from "./PlayerPair";
@@ -15,6 +15,7 @@ export class GameRoom {
     private _deck: string[] = [];
     private _startingPlayerId: string = "";
     private _currentPlayerId: string = "";
+    private _crystalBallCount: number = 3;
 
     constructor(
         readonly gameManager: GameManager,
@@ -33,6 +34,10 @@ export class GameRoom {
         };
     }
 
+    get currentPair(): PlayerPair {
+        return this.getPlayerPairFromPlayer1Id(this._currentPlayerId)!;
+    }
+
     get gameInfo() {
         if (!this._startingPlayerId) return null;
         return {
@@ -48,6 +53,7 @@ export class GameRoom {
             pairedPlayerCard: this.getPlayerPairFromPlayer1Id(
                 this._currentPlayerId,
             )?.player2ChosenCard,
+            crystalBallStrength: this._crystalBallCount,
         };
     }
 
@@ -105,21 +111,23 @@ export class GameRoom {
         // Ex: if we have 2 players, we want 1 set of cards
         const totalCards = (this._lobby.length - 1) * 18;
         this._deck = buildDeck(totalCards);
+        this._crystalBallCount = 3;
 
         // Shuffle the player order and reset their cards
         this._lobby.sort(() => Math.random() - 0.5);
         this._lobby.forEach((player) => {
-            player.cards = [];
+            player.resetCards();
         });
 
         // Deal out 7 cards to each player
         for (let i = 0; i < 6; i++) {
             this._lobby.forEach((player) => {
-                player.cards.push(this._deck.shift()!);
+                player.addCard(this._deck.shift()!);
             });
         }
 
         // Create pairs of players
+        this._playerPairs = [];
         for (let i = 0; i < this._lobby.length; i++) {
             const player1: Player = this._lobby[i];
             const player2: Player =
@@ -134,5 +142,51 @@ export class GameRoom {
         const randomIndex = Math.floor(Math.random() * this._lobby.length);
         this._startingPlayerId = this._lobby[randomIndex].uniqueClientId;
         this._currentPlayerId = this._startingPlayerId;
+    }
+
+    drawCard(): string {
+        if (this._deck.length === 0) {
+            return "";
+        }
+        // Draw a card.
+        // If it's a crystal ball, decrement the crystal ball count and draw again
+        // until a non-crystal ball card is drawn
+        let card = "";
+        while (true) {
+            card = this._deck.shift()!;
+            if (card === CRYSTAL_BALL) {
+                card = "";
+                this._crystalBallCount--;
+                continue;
+            } else break;
+        }
+        return card;
+    }
+
+    /** Update the current player to the next person */
+    changeTurns(): void {
+        const currentListIndex = this._lobby.findIndex(
+            (player) => player.uniqueClientId === this._currentPlayerId,
+        );
+        const nextIndex =
+            currentListIndex + 1 === this._lobby.length
+                ? 0
+                : currentListIndex + 1;
+
+        this._currentPlayerId = this._lobby[nextIndex].uniqueClientId;
+    }
+
+    get isGameOver(): boolean {
+        return (
+            this._crystalBallCount == 0 &&
+            this._currentPlayerId === this._startingPlayerId
+        );
+    }
+
+    get winner(): PlayerPair {
+        const playerPairsSortedByThoughtTokenValue = this._playerPairs.sort(
+            (a, b) => a.totalThoughtTokenValues - b.totalThoughtTokenValues,
+        );
+        return playerPairsSortedByThoughtTokenValue[0];
     }
 }

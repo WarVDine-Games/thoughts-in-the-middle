@@ -5,6 +5,7 @@ import helmet from "helmet";
 import { Logger } from "./helpers/logger";
 import { GameManager, JoinGameActionResponse } from "./managers/GameManager";
 import { PlayerManager } from "./managers/PlayerManager";
+import { thoughtTokenMapping } from "./models/ThoughtToken";
 
 // PORT we will listen on
 const PORT = process.env.PORT || 2019;
@@ -129,15 +130,87 @@ io.on("connection", (socket) => {
         }
 
         gameRoom.startGame();
-        logger.debug(gameRoom.gameInfo);
-        logger.debug(gameRoom.lobbyInfo);
 
         io.to(gameRoomId).emit("lobbyInfo", gameRoom.lobbyInfo);
         io.to(gameRoomId).emit("gameInfo", gameRoom.gameInfo);
+        io.to(gameRoomId).emit("gameOver", null);
         gameRoom.lobby.forEach((player) => {
             io.to(player.socketId).emit("yourCards", player.cards);
         });
     });
+
+    socket.on("selectCard", ({ uniqueClientId, card }) => {
+        const player = playerManager.findPlayerFromClientId(uniqueClientId);
+        if (!player) {
+            socket.emit("error", { message: "Player not found" });
+            return;
+        }
+
+        const gameRoom = gameManager.findGame(player.currentGameRoomId);
+        if (!gameRoom) {
+            socket.emit("error", { message: "Game not found" });
+            return;
+        }
+
+        if (!gameRoom.currentPair) {
+            socket.emit("error", { message: "Player pair not found" });
+            return;
+        }
+
+        if (gameRoom.currentPair.playerIdThatShouldPlay !== uniqueClientId) {
+            socket.emit("error", {
+                message: "It's not your turn to play",
+            });
+            return;
+        }
+        if (!player.hasCard(card)) {
+            socket.emit("error", { message: "You don't have this card" });
+            return;
+        }
+
+        gameRoom.currentPair.playCardForPlayer(uniqueClientId, card);
+        player.removeCard(card);
+        const newCard = gameRoom.drawCard();
+        if (newCard !== "") {
+            player.addCard(newCard);
+        }
+
+        io.to(player.currentGameRoomId).emit("gameInfo", gameRoom.gameInfo);
+        socket.emit("yourCards", player.cards);
+    });
+
+    socket.on(
+        "giveThoughtToken",
+        ({ uniqueClientId, thoughtTokenStrength }) => {
+            const player = playerManager.findPlayerFromClientId(uniqueClientId);
+            if (!player) {
+                socket.emit("error", { message: "Player not found" });
+                return;
+            }
+            const gameRoom = gameManager.findGame(player.currentGameRoomId);
+            if (!gameRoom) {
+                socket.emit("error", { message: "Game not found" });
+                return;
+            }
+
+            if (thoughtTokenStrength >= 1) {
+                gameRoom.currentPair.addThoughtToken(
+                    thoughtTokenMapping[thoughtTokenStrength]!,
+                );
+            }
+            gameRoom.currentPair.clearChosenCards();
+            gameRoom.changeTurns();
+            if (gameRoom.isGameOver) {
+                io.to(player.currentGameRoomId).emit("gameOver", {
+                    winningPair: gameRoom.winner.playerPairInfo,
+                    totalScore: gameRoom.winner.totalThoughtTokenValues,
+                });
+                return;
+            }
+
+            io.to(player.currentGameRoomId).emit("gameInfo", gameRoom.gameInfo);
+        },
+    );
 });
 
 logger.info("server configuration complete");

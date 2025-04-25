@@ -4,6 +4,13 @@ export enum ThoughtTokenStrength {
     STRONG = "STRONG",
 }
 
+export const thoughtTokenMapping: Array<ThoughtTokenStrength | null> = [
+    null,
+    ThoughtTokenStrength.WEAK,
+    ThoughtTokenStrength.NORMAL,
+    ThoughtTokenStrength.STRONG,
+];
+
 export class ThoughtToken {
     private _value: number;
 

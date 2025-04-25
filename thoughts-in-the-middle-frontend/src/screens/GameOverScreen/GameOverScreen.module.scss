@@ -1,0 +1,15 @@
+.gameOverScreen {
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    box-shadow: #bbb 0px 4px 8px 0px, #bbb 0px 2px 4px 0px;
+    padding: 16px;
+    width: 50%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

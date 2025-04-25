@@ -903,7 +903,7 @@ const WORDS = ALL_WORDS.filter((word) => {
     return true;
 });
 
-const CRYSTAL_BALL = "CRYSTAL BALL";
+export const CRYSTAL_BALL = "CRYSTAL BALL";
 const CRYSTAL_BALL_COUNT = 3;
 
 export const buildDeck = (count: number): string[] => {
@@ -921,6 +921,5 @@ export const buildDeck = (count: number): string[] => {
         );
         deck.splice(randomPosition, 0, CRYSTAL_BALL);
     }
-    console.log(deck);
     return deck;
 };
