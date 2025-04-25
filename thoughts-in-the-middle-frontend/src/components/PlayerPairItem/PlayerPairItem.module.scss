@@ -1,20 +1,71 @@
+.playerPairHoverContainer {
+    position: relative;
+    z-index: auto;
+}
+
 .playerPairItem {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    gap: 0;
     padding: 10px;
     border-radius: 8px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #333;
+    border: 1px solid #333;
     margin-bottom: 10px;
     cursor: default;
-    transition: background-color 0.3s ease;
+    transition: 
+        background-color 0.1s ease,
+        border 0.1s ease,
+        box-shadow 0.1s ease;
 
     &:hover {
-        background-color: #e0e0e0;
+        background-color: #555;
+        border: 1px solid #555;
     }
+}
+
+.isActivePair {
+    box-shadow: 0 0 10px gray;
+}
+
+.isActivePair:hover {
+    box-shadow: 0 0 10px lightgray;
+}
+
+.playerPairItem p {
+    margin: 0.5rem;
 }
 
 .playerPairItemText {
     font-size: 1.2rem;
+}
+
+@keyframes fadeInPopup {
+    from {
+        opacity: 0;
+        transform: translate(-100%, -50%) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-100%, -50%) scale(1);
+    }
+}
+
+.tooltipContainer {
+    animation: fadeInPopup 0.05s ease-out;
+    z-index: 99999;
+    // show this on the left side of the player pair item
+    position: absolute;
+    left: -1vmin;
+    top: 50%;
+    transform: translate(-100%, -50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #111;
+    pointer-events: none;
 }

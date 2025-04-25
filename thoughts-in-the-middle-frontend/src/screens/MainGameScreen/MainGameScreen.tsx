@@ -54,7 +54,10 @@ export const MainGameScreen = ({
                     <LobbyList publicPlayerInfo={lobbyInfo.lobby} />
                 ) : (
                     <div className={styles.playPairList}>
-                        <PlayerPairList playerPairInfo={gameInfo.playerPairs} />
+                        <PlayerPairList
+                            gameInfo={gameInfo}
+                            playerPairInfo={gameInfo.playerPairs}
+                        />
                     </div>
                 )}
             </div>

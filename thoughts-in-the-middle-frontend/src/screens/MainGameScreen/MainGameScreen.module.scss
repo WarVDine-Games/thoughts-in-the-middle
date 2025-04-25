@@ -9,6 +9,14 @@
         "playerCards playerCards lobbyInfo";
 }
 
+.roomCode {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    margin-left: 2rem;
+}
+
 .lobbyInfo {
     grid-area: lobbyInfo;
 }

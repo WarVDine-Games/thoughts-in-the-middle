@@ -2,12 +2,15 @@
     display: flex;
     max-width: 8rem;
     position: relative;
+    z-index: 1;
+    background-color: #111;
+    border-radius: 1rem;
 }
 
 .thoughtTokenContainer::after {
     content: "";
     position:absolute;
-    top: 50%;;
+    top: 50%;
     right: 0;
     width: 3vmin;
     height: 3vmin;
@@ -37,4 +40,5 @@
     align-items: center;
     justify-content: center;
     cursor: default;
+    z-index: 1;
 }

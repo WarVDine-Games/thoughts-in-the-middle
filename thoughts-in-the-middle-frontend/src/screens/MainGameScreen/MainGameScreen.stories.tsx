@@ -24,8 +24,8 @@ export const Default = {
             currentPlayerCard: "Card 2",
             playerPairs: [
                 {
-                    player1: { name: "Player 1", uniqueClientId: "1" },
-                    player2: { name: "Player 2", uniqueClientId: "2" },
+                    player1: { name: "Player 1", uniqueClientId: "10" },
+                    player2: { name: "Player 2", uniqueClientId: "23" },
                     thoughtTokens: ["WEAK", "STRONG"],
                 },
                 {
@@ -34,23 +34,23 @@ export const Default = {
                     thoughtTokens: ["WEAK", "STRONG"],
                 },
                 {
-                    player1: { name: "Player 1", uniqueClientId: "1" },
-                    player2: { name: "Player 2", uniqueClientId: "2" },
+                    player1: { name: "Player 1", uniqueClientId: "3" },
+                    player2: { name: "Player 2", uniqueClientId: "4" },
                     thoughtTokens: ["WEAK", "STRONG"],
                 },
                 {
-                    player1: { name: "Player 1", uniqueClientId: "1" },
-                    player2: { name: "Player 2", uniqueClientId: "2" },
+                    player1: { name: "Player 1", uniqueClientId: "5" },
+                    player2: { name: "Player 2", uniqueClientId: "6" },
                     thoughtTokens: ["WEAK", "STRONG"],
                 },
                 {
-                    player1: { name: "Player 1", uniqueClientId: "1" },
-                    player2: { name: "Player 2", uniqueClientId: "2" },
+                    player1: { name: "Player 1", uniqueClientId: "7" },
+                    player2: { name: "Player 2", uniqueClientId: "8" },
                     thoughtTokens: ["WEAK", "STRONG"],
                 },
                 {
-                    player1: { name: "Player 1", uniqueClientId: "1" },
-                    player2: { name: "Player 2", uniqueClientId: "2" },
+                    player1: { name: "Player 1", uniqueClientId: "9" },
+                    player2: { name: "Player 2", uniqueClientId: "0" },
                     thoughtTokens: ["WEAK", "STRONG"],
                 },
             ],

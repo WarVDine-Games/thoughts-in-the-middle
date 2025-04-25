@@ -9,6 +9,7 @@
 .scrollableContainer {
     width: 100%;
     overflow-y: scroll;
+    overflow: visible;
     max-height: 80vh;
 }
 .playerPairList h2 {
@@ -21,7 +22,7 @@
     margin: 0;
     width: 100%;
 }
-.playerListUl li {
+.playerListUl > li {
     display: flex;
     flex-direction: column;
     align-items: center;

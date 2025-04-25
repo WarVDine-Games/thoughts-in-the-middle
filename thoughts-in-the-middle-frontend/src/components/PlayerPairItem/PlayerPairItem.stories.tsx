@@ -19,7 +19,24 @@ export const Default = {
                 name: "Bob",
                 id: "2",
             },
-            thoughtTokens: ["Token1", "Token2"],
+            thoughtTokens: ["WEAK", "STRONG", "NORMAL"],
+        },
+    },
+};
+
+export const ActivePlayer = {
+    args: {
+        isActivePair: true,
+        playerPairInfo: {
+            player1: {
+                name: "Alice",
+                id: "1",
+            },
+            player2: {
+                name: "Bob",
+                id: "2",
+            },
+            thoughtTokens: ["WEAK", "STRONG", "NORMAL"],
         },
     },
 };
