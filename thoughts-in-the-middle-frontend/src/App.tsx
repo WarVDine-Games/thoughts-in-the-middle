@@ -25,7 +25,8 @@ function App() {
         onSelectCard,
         onGiveThoughtToken,
     } = useSocketIo({
-        socketIoUrl: process.env.BACKEND_URL ?? "http://localhost:2019",
+        socketIoUrl:
+            process.env.REACT_APP_BACKEND_URL ?? "http://localhost:2019",
         uniqueClientId,
         updateLobbyInfo: setLobbyInfo,
         showError: errorState.showError,
