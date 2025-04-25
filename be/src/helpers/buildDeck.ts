@@ -913,17 +913,14 @@ export const buildDeck = (count: number): string[] => {
     const deck = shuffledWords.slice(0, count);
 
     // Put three crystal ball cards in random spots within the last third of the word list
-    const crystalBallPositions: number[] = [];
     const start = Math.floor(deck.length * (2 / 3));
-    const end = deck.length - 1;
-    while (crystalBallPositions.length < CRYSTAL_BALL_COUNT) {
+    for (let i = 0; i < CRYSTAL_BALL_COUNT; i++) {
+        const end = deck.length - 1;
         const randomPosition = Math.floor(
             Math.random() * (end - start + 1) + start,
         );
-        if (!crystalBallPositions.includes(randomPosition)) {
-            crystalBallPositions.push(randomPosition);
-        }
         deck.splice(randomPosition, 0, CRYSTAL_BALL);
     }
+    console.log(deck);
     return deck;
 };

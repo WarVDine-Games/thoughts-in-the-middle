@@ -1,3 +1,4 @@
+import { start } from "repl";
 import { buildDeck } from "../helpers/buildDeck";
 import { GameManager } from "../managers/GameManager";
 import { Player } from "./Player";
@@ -33,6 +34,7 @@ export class GameRoom {
     }
 
     get gameInfo() {
+        if (!this._startingPlayerId) return null;
         return {
             roomId: this.roomId,
             playerPairs: this._playerPairs.map((pair) => pair.playerPairInfo),
@@ -104,11 +106,14 @@ export class GameRoom {
         const totalCards = (this._lobby.length - 1) * 18;
         this._deck = buildDeck(totalCards);
 
-        // Shuffle the player order
+        // Shuffle the player order and reset their cards
         this._lobby.sort(() => Math.random() - 0.5);
+        this._lobby.forEach((player) => {
+            player.cards = [];
+        });
 
         // Deal out 7 cards to each player
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 6; i++) {
             this._lobby.forEach((player) => {
                 player.cards.push(this._deck.shift()!);
             });

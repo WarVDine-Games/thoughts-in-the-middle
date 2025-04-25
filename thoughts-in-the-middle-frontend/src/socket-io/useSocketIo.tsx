@@ -1,11 +1,13 @@
 import { io, Socket } from "socket.io-client";
-import { LobbyInfo } from "../interfaces";
+import { GameInfo, LobbyInfo } from "../interfaces";
 
 export interface UseSocketIoProps {
     socketIoUrl?: string;
     uniqueClientId?: string;
-    updateLobbyInfo: (lobbyInfo: LobbyInfo) => void;
+    updateLobbyInfo: (lobbyInfo: LobbyInfo | null) => void;
     showError: (error: string) => void;
+    updateGameInfo: (gameInfo: GameInfo | null) => void;
+    updatePlayerCards: (cards: string[]) => void;
 }
 
 export interface UseSocketIoReturn {
@@ -20,14 +22,22 @@ export const useSocketIo = ({
     uniqueClientId,
     updateLobbyInfo,
     showError,
+    updateGameInfo,
+    updatePlayerCards,
 }: UseSocketIoProps) => {
     const socket = io(socketIoUrl, {
         autoConnect: true,
         transports: ["websocket"],
     });
 
-    socket.on("lobbyInfo", (lobbyInfo) => {
+    socket.on("lobbyInfo", (lobbyInfo: LobbyInfo | null) => {
         updateLobbyInfo(lobbyInfo);
+    });
+    socket.on("gameInfo", (gameInfo: GameInfo | null) => {
+        updateGameInfo(gameInfo);
+    });
+    socket.on("yourCards", (cards: string[]) => {
+        updatePlayerCards(cards);
     });
     socket.on("error", (error) => {
         showError(error.message ?? error);

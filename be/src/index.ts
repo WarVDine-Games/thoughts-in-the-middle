@@ -59,6 +59,8 @@ io.on("connection", (socket) => {
 
         socket.join(newGameRoom.roomId);
         io.to(newGameRoom.roomId).emit("lobbyInfo", newGameRoom.lobbyInfo);
+        io.to(newGameRoom.roomId).emit("gameInfo", newGameRoom.gameInfo);
+        socket.emit("yourCards", player.cards);
     });
 
     socket.on(
@@ -96,6 +98,8 @@ io.on("connection", (socket) => {
 
             socket.join(roomCode);
             io.to(roomCode).emit("lobbyInfo", gameRoom.lobbyInfo);
+            io.to(roomCode).emit("gameInfo", gameRoom.gameInfo);
+            socket.emit("yourCards", player.cards);
         },
     );
 
@@ -133,7 +137,6 @@ io.on("connection", (socket) => {
         gameRoom.lobby.forEach((player) => {
             io.to(player.socketId).emit("yourCards", player.cards);
         });
-        io.to(gameRoomId).emit("startGame");
     });
 });
 
